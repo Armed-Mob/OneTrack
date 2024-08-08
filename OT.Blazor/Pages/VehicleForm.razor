@@ -1,0 +1,48 @@
+﻿@using OT.Blazor.Services
+@inject OT.Blazor.Services.VinLookupService VinService
+
+
+<div>
+    <input type="text" @bind="vin" placeholder="Enter VIN" />
+    <input type="number" @bind-value="year" placeholder="Enter Model Year (optional)" />
+    <button @onclick="LookupVin">Lookup VIN</button>
+</div>
+
+@if (vehicleDetails != null)
+{
+    <div style="margin-top:0.5em;">
+        <EditForm Model="vehicleDetails" OnInvalidSubmit="SaveVehicle">
+            Color: <InputText @bind-Value="vehicleDetails.Color" />
+            <br />
+            Year: <InputText @bind-Value="vehicleDetails.Year" />
+            <br />
+            Make: <InputText @bind-Value="vehicleDetails.Make" />
+            <br />
+            Model: <InputText @bind-Value="vehicleDetails.Model" />
+            <br />
+            Trim: <InputText @bind-Value="vehicleDetails.Trim" />
+            <br />
+            Doors: <InputText @bind-Value="vehicleDetails.Doors" />
+            <br />
+            GVWR: <InputTextArea @bind-Value="vehicleDetails.Gvwr" />
+            <br />
+            <button type="submit">Save To Database</button>
+        </EditForm>
+    </div>    
+}
+
+@code {
+    private string vin;
+    private int? year; // Optional Year Input
+    private VehicleDetails vehicleDetails;
+
+    private async Task LookupVin()
+    {
+        vehicleDetails = await VinService.GetVehicleDetailsByVin(vin);
+    }
+
+    private async Task SaveVehicle()
+    {
+        // Call OT.Api to save vechileDetails
+    }
+}
