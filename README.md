@@ -77,4 +77,6 @@ OT.Api: Api Backend
 - Adaptive Driving Beam (ADB)
 - Rear Cross Traffic Alert
 
-![VinLookup](https://github.com/user-attachments/assets/263afd00-9c59-4dab-a287-842eedc0c003)
+
+![08082024UI](https://github.com/user-attachments/assets/2b82c1ce-b476-4ca8-a496-eb8039b60e1f)
+![VinLookup](https://github.com/user-attachments/assets/d91d1f07-d39f-4683-9091-f8bd449ef3d7)
