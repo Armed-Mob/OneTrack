@@ -1,61 +1,120 @@
 ﻿@using OT.Blazor.Services
+@using OT.Shared
 @inject OT.Blazor.Services.VinLookupService VinService
 
-
-<div>
-    <div class="mb-3">
-        <label for="vin" class="form-label">VIN</label>
-        <input @bind="vin" class="form-control" id="vin" />
+<div class="row row-cols-lg-auto g-3 align-items-center">
+    <div class="col-4">
+        <label class="visually-hidden" for="vin">VIN</label>
+        <div class="input-group">
+            <div class="input-group-text">VIN</div>
+            <input 
+                type="text"
+                @bind="vin"
+                class="form-control"
+                id="vin"
+                placeholder="VIN"
+            />
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="year" class="form-label">Year (optional)</label>
-        <InputNumber @bind-Value="year" class="form-control" id="year" />        
-    </div>    
-    <button @onclick="LookupVin" class="btn btn-success">Lookup Vin</button>
+    <div class="col-4">
+        <label class="visually-hidden" for="year">Year</label>
+        <div class="input-group">
+            <div class="input-group-text">Year</div>
+            <InputNumber
+                @bind-Value="year"
+                id="year"
+                class="form-control"
+            />
+        </div>
+    </div>
+    <div class="col-4">
+        <button class="btn btn-primary" @onclick="LookupVin">Search VIN</button>
+    </div>
 </div>
 
 @if (vehicleDetails != null)
-{
+{    
     <div style="margin-top:0.5em;">
-        <EditForm Model="vehicleDetails" OnInvalidSubmit="SaveVehicle">
-            <div class="mb-3">
-                <label for="color" class="form-label">Color</label>
-                <InputText @bind-Value="vehicleDetails.Color" class="form-control" id="color" />
+        <EditForm Model="vehicleDetails" OnValidSubmit="SaveVehicle">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="color" class="form-label">Color</label>
+                    <InputText @bind-Value="vehicleDetails.Color" class="form-control" id="color" />
+                </div>
+                <div class="col-md-3">
+                    <label for="doors" class="form-label">Doors</label>
+                    <InputText @bind-Value="vehicleDetails.Doors" class="form-control" id="doors" />
+                </div>
+                <div class="col-md-3">
+                    <label for="cabType" class="form-label">CabType</label>
+                    <InputText @bind-Value="vehicleDetails.CabType" class="form-control" id="cabType" />
+                </div>
+                <div class="col-md-3">
+                    <label for="year" class="form-label">Year</label>
+                    <InputText @bind-Value="vehicleDetails.Year" class="form-control" id="year" />
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="year" class="form-label">Color</label>
-                <InputText @bind-Value="vehicleDetails.Year" class="form-control" id="year" />
+            <div class="row">
+                
+                <div class="col-md-3">
+                    <label for="make" class="form-label">Make</label>
+                    <InputText @bind-Value="vehicleDetails.Make" class="form-control" id="make" />
+                </div>
+                <div class="col-md-3">
+                    <label for="model" class="form-label">Model</label>
+                    <InputText @bind-Value="vehicleDetails.Model" class="form-control" id="model" />
+                </div>
+                <div class="col-md-3">
+                    <label for="series" class="form-label">Series</label>
+                    <InputText @bind-Value="vehicleDetails.Series" class="form-control" id="series" />
+                </div>
+                <div class="col-md-3">
+                    <label for="trim" class="form-label">Trim</label>
+                    <InputText @bind-Value="vehicleDetails.Trim" class="form-control" id="trim" />
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="make" class="form-label">Make</label>
-                <InputText @bind-Value="vehicleDetails.Make" class="form-control" id="make" />
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="driveType" class="form-label">Drive Type</label>
+                    <InputText @bind-Value="vehicleDetails.DriveType" class="form-control" id="driveType" />
+                </div>
+                <div class="col-md-3">
+                    <label for="engineModel" class="form-label">Engine Model</label>
+                    <InputText @bind-Value="vehicleDetails.EngineModel" class="form-control" id="engineModel" />
+                </div>
+                <div class="col-md-3">
+                    <label for="displacementL" class="form-label">Displacement (L)</label>
+                    <InputText @bind-Value="vehicleDetails.DisplacementL" class="form-control" id="displacementL" />
+                </div>
+                <div class="col-md-3">
+                    <label for="turbo" class="form-label">Turbo</label>
+                    <InputText @bind-Value="vehicleDetails.Turbo" class="form-control" id="turbo" />
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="model" class="form-label">Model</label>
-                <InputText @bind-Value="vehicleDetails.Model" class="form-control" id="model" />
-            </div>
-            <div class="mb-3">
-                <label for="trim" class="form-label">Trim</label>
-                <InputText @bind-Value="vehicleDetails.Trim" class="form-control" id="trim" />
-            </div>
-            <div class="mb-3">
-                <label for="doors" class="form-label">Doors</label>
-                <InputText @bind-Value="vehicleDetails.Doors" class="form-control" id="doors" />
-            </div>
-            <div class="mb-3">
-                <label for="gvwr" class="form-label">GVWR</label>
-                <InputText @bind-Value="vehicleDetails.Gvwr" class="form-control" id="gvwr" />
+            <div class="row">
+                <div class="col-md-12">
+                    <label for="gvwr" class="form-label">GVWR</label>
+                    <InputText @bind-Value="vehicleDetails.Gvwr" class="form-control" id="gvwr" />
+                </div>
+            </div>            
+            <div class="row">
+                <div class="col-md-12 align-items-end">
+                    <button type="submit" class="btn btn-outline-primary" disabled>Save To Customer</button>
+                </div>                
             </div>
             
-            <button type="submit" class="btn btn-primary" disabled>Save To Database</button>
         </EditForm>
     </div>    
 }
 
 @code {
+    private List<ShopClient> clients = new List<ShopClient>();
+
     private string vin;
     private int? year; // Optional Year Input
-    private VehicleDetails vehicleDetails;
+    private OT.Blazor.Services.VehicleDetails vehicleDetails;
+
+
 
     private async Task LookupVin()
     {
@@ -65,5 +124,5 @@
     private async Task SaveVehicle()
     {
         // Call OT.Api to save vechileDetails
-    }
+    }    
 }

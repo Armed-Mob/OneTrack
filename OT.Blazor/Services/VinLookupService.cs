@@ -55,6 +55,20 @@ namespace OT.Blazor.Services
                         details.Doors = result.Value; break;
                     case "Gross Vehicle Weight Rating From":
                         details.Gvwr = result.Value; break;
+                    case "Series":
+                        details.Series = result.Value; break;
+                    case "Drive Type":
+                        details.DriveType = result.Value; break;
+                    case "Engine Model":
+                        details.EngineModel = result.Value; break;
+                    case "Cab Type":
+                        details.CabType = result.Value; break;
+                    case "Turbo":
+                        details.Turbo = result.Value; break;
+                    case "Fuel Type - Primary":
+                        details.FuelTypePrimary = result.Value; break;
+                    case "Displacement (L)":
+                        details.DisplacementL = result.Value; break;
                 }
             });
 
@@ -68,8 +82,15 @@ namespace OT.Blazor.Services
         public string Model { get; set; } = string.Empty;
         public string Year { get; set; } = string.Empty;
         public string Trim { get; set; } = string.Empty;
-        public string Doors { get; set; }
+        public string Doors { get; set; } = string.Empty;
         public string Gvwr { get; set; } = string.Empty;
         public string Color { get; set; } = string.Empty;
+        public string Series { get; set; } = string.Empty;
+        public string DriveType { get; set; } = string.Empty;
+        public string EngineModel { get; set; } = string.Empty;
+        public string Turbo { get; set; } = string.Empty;
+        public string CabType { get; set; } = string.Empty;
+        public string FuelTypePrimary { get; set; } = string.Empty;
+        public string DisplacementL { get; set; } = string.Empty;
     }
 }
