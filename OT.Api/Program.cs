@@ -16,6 +16,7 @@ builder.Services.AddDbContext<OTApiSQLContext>(options => options.UseSqlServer(b
 builder.Services.AddScoped<IShopRepository, ShopRepository>();
 builder.Services.AddScoped<IShopClientRepository, ShopClientRepository>();
 builder.Services.AddScoped<IVehicleDetailsRepository, VehicleDetailsRepository>();
+builder.Services.AddScoped<IVehicleColorRepository, VehicleColorRepository>();
 
 var app = builder.Build();
 

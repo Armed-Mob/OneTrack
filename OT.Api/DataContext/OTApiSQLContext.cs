@@ -9,7 +9,7 @@ namespace OT.Api.DataContext
         {
         }
 
-        public DbSet<VehicleColor> vehicleColors { get; set; }
+        public DbSet<VehicleColor> VehicleColors { get; set; }
         public DbSet<Shop> Shops { get; set; }
         public  DbSet<ShopClient> ShopClients { get; set; }
         public DbSet<VehicleDetails> VehicleDetails { get; set; }

@@ -50,7 +50,6 @@ namespace OT.Api.Repositories
             var shop = await GetShopByIdAsync(id);
             if (shop != null)
             {
-
                 _context.Shops.Remove(shop);
                 await _context.SaveChangesAsync();
             }
