@@ -2,7 +2,6 @@
 @inject HttpClient _httpClient
 @inject VehicleColorService ColorService
 @inject NavigationManager NavigationManager
-@inject IJSRuntime JS
 @using OT.Shared
 
 <div class="container-xl mb-xl-3">
@@ -15,7 +14,7 @@
         </div>
     </div>    
 </div>
-<div class="container-xl">
+<div class="mb-3">
     @if (colors == null)
     {
         <p><em>Loading ...</em></p>
@@ -25,11 +24,10 @@
         <p><em>No Vehicle Colors found.</em></p>
     }
     else
-    {
-        <table class="table table-bordered table-responsive-lg table-striped">
+    {       
+        <table class="table table-bordered table-striped table-responsive">
             <thead>
                 <tr>
-                    <th>Database Id</th>
                     <th>Color Name</th>
                     <th>Hex Value</th>
                     <th>Actions</th>
@@ -38,10 +36,7 @@
             <tbody>
                 @foreach (var color in colors)
                 {
-                    <tr>
-                        <td>
-                            @color.Id
-                        </td>
+                    <tr>   
                         <td>
                             @color.ColorName
                         </td>
@@ -49,7 +44,9 @@
                             @color.HexValue
                         </td>
                         <td>
-                            <button class="btn btn-outline-primary" @onclick="() => EditColor(color.Id)">Edit</button> | <button class="btn btn-outline-danger" @onclick="() => ConfirmDelete(color.Id, color.ColorName)">Delete</button>
+                            <button class="btn btn-outline-primary" @onclick="() => EditColor(color.Id)">Edit</button> | <button type="button" class="btn btn-outline-danger" @onclick="() => ConfirmDelete(color.Id, color.ColorName)" data-bs-toggle="modal" data-bs-target="#deleteConfirmationStaticBackdrop">
+                                Delete
+                            </button>
                         </td>
                     </tr>
                 }
@@ -59,19 +56,19 @@
 </div>
 
 <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="deleteConfirmationStaticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteConfirmationStaticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
-                <button type="button" class="btn-close" @onclick="() => HideModal()"></button>
+                <h1 class="modal-title fs-5" id="deleteConfirmationStaticBackdropLabel">Confirm @currentColorName Delete</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 Are you sure you want to delete the color '@currentColorName'?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" @onclick="() => HideModal()">Cancel</button>
-                <button type="button" class="btn btn-danager" @onclick="DeleteColor">Delete</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" @onclick="DeleteColor" data-bs-dismiss="modal">Delete</button>
             </div>
         </div>
     </div>
@@ -107,24 +104,23 @@
     {
         currentColorId = colorId;
         currentColorName = colorName;
-        ShowModal("deleteConfirmationModal");
+        StateHasChanged(); // Ensure the UI updates the new values before showing the modal
     }
 
     private async Task DeleteColor()
     {
-        await ColorService.DeleteVehicleColor(currentColorId);
-        colors.RemoveAll(c => c.Id == currentColorId);
-        await HideModal();
-        StateHasChanged();
-    }
-
-    private async Task ShowModal(string modalId)
-    {
-        await JS.InvokeVoidAsync("showModal", modalId);
-    }
-
-    private async Task HideModal()
-    {
-        await JS.InvokeVoidAsync("hideModal", "deleteConfirmationModal");
-    }
+        bool deleted = await ColorService.DeleteVehicleColor(currentColorId);
+        if (deleted)
+        {
+            // Refresh the list or navigate away
+            colors.RemoveAll(c => c.Id == currentColorId);
+            StateHasChanged(); // Update UI
+        }
+        else
+        {
+            // Handle the case where the deletion was not successful
+            // Show an error message or log the error
+            Console.WriteLine("Failed to delete the color.");
+        }
+    }    
 }

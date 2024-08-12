@@ -34,9 +34,19 @@ namespace OT.Blazor.Services
             await _httpClient.PutAsJsonAsync($"api/vehiclecolor/{color.Id}", color);
         }
 
-        public async Task DeleteVehicleColor(int id)
+        public async Task<bool> DeleteVehicleColor(int id)
         {
-            await _httpClient.DeleteAsync($"api/vehiclecolor/{id}");
+            try
+            {
+                HttpResponseMessage response = await _httpClient.DeleteAsync($"/api/vehiclecolor/{id}");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex) 
+            {
+                // TODO: Log the exception or handle it accordingly
+                Console.WriteLine($"Error deleting vehicle color: {ex.Message}");
+                return false;
+            }            
         }
     }
 }
