@@ -20,7 +20,8 @@ namespace OT.Api.Repositories
                 .Select(c => new GetAllColorsResponseDTO
                 {
                     Id = c.Id,
-                    ColorName = c.ColorName
+                    ColorName = c.ColorName,
+                    HexValue = c.HexValue
                 })
                 .OrderByDescending(c => c.ColorName)
                 .ToListAsync();

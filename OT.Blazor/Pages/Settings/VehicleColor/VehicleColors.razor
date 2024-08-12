@@ -1,0 +1,130 @@
+﻿@page "/vehiclecolors"
+@inject HttpClient _httpClient
+@inject VehicleColorService ColorService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+@using OT.Shared
+
+<div class="container-xl mb-xl-3">
+    <div class="row">
+        <div class="mb-3">
+            <h1>Vehicle Colors</h1>
+        </div>
+        <div class="mb-3">
+            <button @onclick="NavigateToCreateNewColor" class="btn btn-outline-primary" disabled="@isNavigating">Create New Vehicle Color</button>
+        </div>
+    </div>    
+</div>
+<div class="container-xl">
+    @if (colors == null)
+    {
+        <p><em>Loading ...</em></p>
+    }
+    else if (colors.Count == 0)
+    {
+        <p><em>No Vehicle Colors found.</em></p>
+    }
+    else
+    {
+        <table class="table table-bordered table-responsive-lg table-striped">
+            <thead>
+                <tr>
+                    <th>Database Id</th>
+                    <th>Color Name</th>
+                    <th>Hex Value</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var color in colors)
+                {
+                    <tr>
+                        <td>
+                            @color.Id
+                        </td>
+                        <td>
+                            @color.ColorName
+                        </td>
+                        <td>
+                            @color.HexValue
+                        </td>
+                        <td>
+                            <button class="btn btn-outline-primary" @onclick="() => EditColor(color.Id)">Edit</button> | <button class="btn btn-outline-danger" @onclick="() => ConfirmDelete(color.Id, color.ColorName)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" @onclick="() => HideModal()"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the color '@currentColorName'?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" @onclick="() => HideModal()">Cancel</button>
+                <button type="button" class="btn btn-danager" @onclick="DeleteColor">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    private List<VehicleColor> colors;
+    private int currentColorId;
+    private string currentColorName;
+
+    private bool isNavigating = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        colors = await ColorService.GetVehicleColorsAsync();
+    }    
+
+    private void NavigateToCreateNewColor()
+    {
+        isNavigating = true;
+        NavigationManager.NavigateTo("/vehiclecolor/create");
+        isNavigating = false;
+    }
+
+    private void EditColor(int id)
+    {
+        NavigationManager.NavigateTo($"/vehiclecolor/edit/{id}");
+    }
+
+    private void ConfirmDelete(int colorId, string colorName)
+    {
+        currentColorId = colorId;
+        currentColorName = colorName;
+        ShowModal("deleteConfirmationModal");
+    }
+
+    private async Task DeleteColor()
+    {
+        await ColorService.DeleteVehicleColor(currentColorId);
+        colors.RemoveAll(c => c.Id == currentColorId);
+        await HideModal();
+        StateHasChanged();
+    }
+
+    private async Task ShowModal(string modalId)
+    {
+        await JS.InvokeVoidAsync("showModal", modalId);
+    }
+
+    private async Task HideModal()
+    {
+        await JS.InvokeVoidAsync("hideModal", "deleteConfirmationModal");
+    }
+}

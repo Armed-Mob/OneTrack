@@ -9,5 +9,7 @@ namespace OT.Api.DataTransferObjects.VehicleColor
         public int Id { get; set; }
         [Display(Name = "Color Name")]
         public string ColorName { get; set; } = string.Empty;
+        [Display(Name = "Hex Value")]
+        public string? HexValue { get; set; }
     }
 }

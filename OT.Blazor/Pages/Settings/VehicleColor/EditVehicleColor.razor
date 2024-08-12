@@ -1,0 +1,61 @@
+﻿@page "/vehiclecolor/create"
+@page "/vehiclecolor/edit/{Id:int}"
+@inject VehicleColorService ColorService
+@inject NavigationManager NavigationManager
+@using OT.Shared
+
+<h3 class="mb-3">@(Id == 0 ? "Create" : "Edit") Vehicle Color</h3>
+
+<EditForm Model="vehicleColor" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group mb-1">
+        <label for="colorName">Color Name:</label>
+        <InputText id="colorName" class="form-control" @bind-Value="vehicleColor.ColorName" />
+    </div>
+    <div class="form-group mb-1">
+        <label for="hexValue">Hex Value:</label>
+        <InputText id="hexValue" class="form-control" @bind-Value="vehicleColor.HexValue" />
+    </div>
+
+    <button type="submit" class="btn btn-outline-primary mb-1">Save</button>
+    <button class="btn btn-outline-danger mb-1" @onclick="Cancel">Cancel</button>
+</EditForm>
+
+@code {
+    [Parameter] public int? Id { get; set; }
+
+    private OT.Shared.VehicleColor vehicleColor = new VehicleColor();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (NavigationManager.Uri.Contains("create"))
+        {
+            vehicleColor = new VehicleColor();
+        }
+        else
+        {
+            vehicleColor = await ColorService.GetVehicleColorByIdAsync(Id.Value);
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (Id ==0)
+        {
+            await ColorService.AddVehicleColor(vehicleColor);
+        }
+        else
+        {
+            await ColorService.UpdateVehicleColor(vehicleColor);
+        }
+
+        NavigationManager.NavigateTo("/vehiclecolors");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/vehiclecolors");
+    }
+}

@@ -50,7 +50,8 @@ namespace OT.Api.Controllers
         {
             var color = new VehicleColor
             {
-                ColorName = dto.ColorName
+                ColorName = dto.ColorName,
+                HexValue = dto.HexValue
             };
 
             await _vehicleColorRepository.AddVehicleColorAsync(color);

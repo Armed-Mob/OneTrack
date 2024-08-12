@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OT.Blazor", "OT.Blazor\OT.B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OT.Api", "OT.Api\OT.Api.csproj", "{E664F61E-DCB4-427C-A58B-B9EADFCAC525}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OT.Shared", "OT.Shared\OT.Shared.csproj", "{66D8CC5C-CC80-4755-B63D-A68F32CD16DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OT.Shared", "OT.Shared\OT.Shared.csproj", "{66D8CC5C-CC80-4755-B63D-A68F32CD16DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
