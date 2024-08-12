@@ -1,18 +1,19 @@
 ﻿@page "/createvehicle"
 @using OT.Shared
 @inject OT.Blazor.Services.VinLookupService VinService
+@inject VehicleColorService ColorService
 
-<div class="container-xl">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="col-md-4">
+<div class="container-xl mb-3">
+    <div class="row mb-3">
+        <div class="col-md-8 mb-3">
+            <div class="col-md-4 mb-3">
                 <h3>Create Vehicle</h3>
             </div>            
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 mb-3">
             <h3>Lookup Vehicle</h3>
             <div class="row row-cols-lg-auto g-3 align-items-center">
-                <div class="col-4">
+                <div class="col-4 mb-3">
                     <label class="visually-hidden" for="vin">VIN</label>
                     <div class="input-group">
                         <div class="input-group-text">VIN</div>
@@ -23,7 +24,7 @@
                                placeholder="VIN" />
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-4 mb-3">
                     <label class="visually-hidden" for="year">Year</label>
                     <div class="input-group">
                         <div class="input-group-text">Year</div>
@@ -32,21 +33,27 @@
                                      class="form-control" />
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-4 mb-3">
                     <button class="btn btn-primary" @onclick="LookupVin">Search VIN</button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container-lg">
+    <div class="container-lg mb-3">
         @if (vehicleDetails != null)
         {
-            <div style="margin-top:0.5em;">
+            <div class="mb-3">
                 <EditForm Model="vehicleDetails" OnValidSubmit="SaveVehicle">
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-3">
                             <label for="color" class="form-label">Color</label>
-                            <InputText @bind-Value="vehicleDetails.Color" class="form-control" id="color" />
+                            <select @bind="vehicleDetails.ColorId" id="color" class="form-control">
+                                <option value="">-- Select a color --</option>
+                                @foreach (var color in vehicleColors)
+                                {
+                                    <option value="@color.Id">@color.ColorName</option>
+                                }
+                            </select>
                         </div>
                         <div class="col-md-3">
                             <label for="doors" class="form-label">Doors</label>
@@ -61,7 +68,7 @@
                             <InputText @bind-Value="vehicleDetails.Year" class="form-control" id="year" />
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
 
                         <div class="col-md-3">
                             <label for="make" class="form-label">Make</label>
@@ -80,7 +87,7 @@
                             <InputText @bind-Value="vehicleDetails.Trim" class="form-control" id="trim" />
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-3">
                             <label for="driveType" class="form-label">Drive Type</label>
                             <InputText @bind-Value="vehicleDetails.DriveType" class="form-control" id="driveType" />
@@ -98,13 +105,13 @@
                             <InputText @bind-Value="vehicleDetails.Turbo" class="form-control" id="turbo" />
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-12">
                             <label for="gvwr" class="form-label">GVWR</label>
                             <InputText @bind-Value="vehicleDetails.Gvwr" class="form-control" id="gvwr" />
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-12 align-items-end">
                             <button type="submit" class="btn btn-outline-primary" disabled>Save To Customer</button>
                         </div>
@@ -118,16 +125,22 @@
 
 @code {
     private List<ShopClient> clients = new List<ShopClient>();
+    private List<VehicleColor> vehicleColors = new List<VehicleColor>();
 
     private string vin;
     private int? year; // Optional Year Input
     private OT.Blazor.Services.VehicleDetails vehicleDetails;
 
-
+    protected override async Task OnInitializedAsync()
+    {
+        vehicleColors = await ColorService.GetVehicleColorsAsync();
+        StateHasChanged();
+    }
 
     private async Task LookupVin()
     {
         vehicleDetails = await VinService.GetVehicleDetailsByVin(vin);
+        StateHasChanged();
     }
 
     private async Task SaveVehicle()

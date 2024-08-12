@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OT.Api.DataContext;
 
@@ -11,9 +12,11 @@ using OT.Api.DataContext;
 namespace OT.Api.Migrations
 {
     [DbContext(typeof(OTApiSQLContext))]
-    partial class OTApiSQLContextModelSnapshot : ModelSnapshot
+    [Migration("20240812040227_NullColorId")]
+    partial class NullColorId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

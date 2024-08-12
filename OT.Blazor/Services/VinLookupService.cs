@@ -84,7 +84,7 @@ namespace OT.Blazor.Services
         public string Trim { get; set; } = string.Empty;
         public string Doors { get; set; } = string.Empty;
         public string Gvwr { get; set; } = string.Empty;
-        public string Color { get; set; } = string.Empty;
+        public int? ColorId { get; set; }
         public string Series { get; set; } = string.Empty;
         public string DriveType { get; set; } = string.Empty;
         public string EngineModel { get; set; } = string.Empty;
