@@ -78,5 +78,4 @@ OT.Api: Api Backend
 - Rear Cross Traffic Alert
 
 
-![08082024UI](https://github.com/user-attachments/assets/2b82c1ce-b476-4ca8-a496-eb8039b60e1f)
-![08082024LookedUI](https://github.com/user-attachments/assets/66b201a1-0969-449d-8539-b49ba755af2a)
+![08112024LookedUpUI](https://github.com/user-attachments/assets/da78eaba-8365-44cf-a051-992448875937)
