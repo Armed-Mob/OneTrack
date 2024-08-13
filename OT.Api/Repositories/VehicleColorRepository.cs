@@ -8,10 +8,12 @@ namespace OT.Api.Repositories
     public class VehicleColorRepository : IVehicleColorRepository
     {
         private readonly OTApiSQLContext _context;
+        private readonly ILogger<VehicleColorRepository> _logger;
 
-        public VehicleColorRepository(OTApiSQLContext context)
+        public VehicleColorRepository(OTApiSQLContext context, ILogger<VehicleColorRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<GetAllColorsResponseDTO>> GetAllVehicleColorsAsync()
@@ -70,6 +72,29 @@ namespace OT.Api.Repositories
         {
             return await _context.VehicleColors.AnyAsync(c => c.Id == id);
         }
-        
+
+        public async Task<(bool isSuccess, string message)> CreateColorIfNotExists(VehicleColor color)
+        {
+            try
+            {
+                var exists = await _context.VehicleColors.AnyAsync(c =>
+                    c.ColorName.ToLower() == color.ColorName.ToLower() ||
+                    c.HexValue.ToLower() == color.ColorName.ToLower());
+
+                if (exists)
+                {
+                    return (false, "Color already exists.");
+                }
+
+                _context.VehicleColors.Add(color);
+                await _context.SaveChangesAsync();
+                return (true, "Color created successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error createing color with name {ColorName}", color.ColorName);
+                return (false, "Failed to create color due to server error.");
+            }
+        }
     }
 }

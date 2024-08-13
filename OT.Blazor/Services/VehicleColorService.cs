@@ -24,14 +24,25 @@ namespace OT.Blazor.Services
             return await _httpClient.GetFromJsonAsync<VehicleColor>($"api/vehiclecolor/{id}");
         }
 
-        public async Task AddVehicleColor(VehicleColor color)
+        public async Task<(bool isSuccess, string message)> CreateColorIfNotExists(VehicleColor color)
         {
-            await _httpClient.PostAsJsonAsync("api/vehiclecolor", color);
+            var response = await _httpClient.PostAsJsonAsync("api/vehiclecolor/createifnotexists", color);
+            if (response.IsSuccessStatusCode)
+            {
+                return (true, "Color created successfully.");
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                return (false, errorMessage);
+            }
+
+            return (false, "Failed to create color due to a server error. Please contact system Administrator");
         }
 
-        public async Task UpdateVehicleColor(VehicleColor color)
+        public async Task<HttpResponseMessage> UpdateVehicleColor(VehicleColor color)
         {
-            await _httpClient.PutAsJsonAsync($"api/vehiclecolor/{color.Id}", color);
+            return await _httpClient.PutAsJsonAsync($"api/vehiclecolor/{color.Id}", color);
         }
 
         public async Task<bool> DeleteVehicleColor(int id)

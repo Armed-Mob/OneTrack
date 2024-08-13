@@ -2,6 +2,7 @@
 @inject HttpClient _httpClient
 @inject VehicleColorService ColorService
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JS
 @using OT.Shared
 
 <div class="container-xl mb-xl-3">
@@ -10,7 +11,7 @@
             <h1>Vehicle Colors</h1>
         </div>
         <div class="mb-3">
-            <button @onclick="NavigateToCreateNewColor" class="btn btn-outline-primary" disabled="@isNavigating">Create New Vehicle Color</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createColorModal">Create New Vehicle Color</button>
         </div>
     </div>    
 </div>
@@ -25,7 +26,7 @@
     }
     else
     {       
-        <table class="table table-bordered table-striped table-responsive">
+        <table class="table table-bordered table-responsive">
             <thead>
                 <tr>
                     <th>Color Name</th>
@@ -44,7 +45,7 @@
                             @color.HexValue
                         </td>
                         <td>
-                            <button class="btn btn-outline-primary" @onclick="() => EditColor(color.Id)">Edit</button> | <button type="button" class="btn btn-outline-danger" @onclick="() => ConfirmDelete(color.Id, color.ColorName)" data-bs-toggle="modal" data-bs-target="#deleteConfirmationStaticBackdrop">
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editColorModal" @onclick="() => SetCurrentColor(color)">Edit</button> | <button type="button" class="btn btn-outline-danger" @onclick="() => ConfirmDelete(color.Id, color.ColorName)" data-bs-toggle="modal" data-bs-target="#deleteConfirmationStaticBackdrop">
                                 Delete
                             </button>
                         </td>
@@ -55,7 +56,69 @@
     }
 </div>
 
-<!-- Delete Confirmation Modal -->
+<!-- Create Color Modal -->
+<div class="modal fade" id="createColorModal" tabindex="-1" aria-labelby="creatColorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title" id="createColorModalLabel">Create Vehicle Color</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="createColor" OnValidSubmit="HandleCreateValidSubmit">
+                    <div class="mb-3">
+                        <label for="createColorName" class="form-label">Color Name:</label>
+                        <InputText id="createColorName" class="form-control" @bind-Value="createColor.ColorName" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="createHexValue" class="form-label">Hex Value:</label>
+                        <InputText id="createHexValue" class="form-control" @bind-Value="createColor.HexValue" />
+                    </div>
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" @onclick="CreateColor" disabled="@isProcessing">Create Color</button>
+                @if (!string.IsNullOrEmpty(feedbackMessage))
+                {
+                    <div class="alert alert-warning" role="alert">
+                        @feedbackMessage
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Color Modal-->
+<div class="modal fade" id="editColorModal" tabindex="-1" aria-labelledby="editColorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title" id="editColorModalLabel">Edit Vehicle Color @currentColor.ColorName</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="currentColor" OnValidSubmit="HandleValidSubmit">
+                    <div class="mb-3">
+                        <label for="colorName" class="form-label">Color Name:</label>
+                        <InputText id="colorName" class="form-control" @bind-Value="currentColor.ColorName" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="hexValue" class="form-label">Hex Value:</label>
+                        <InputText id="hexValue" class="form-control" @bind-Value="currentColor.HexValue" />
+                    </div>
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" @onclick="SaveColor" data-bs-dismiss="modal">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Color Confirmation Modal -->
 <div class="modal fade" id="deleteConfirmationStaticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteConfirmationStaticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -67,7 +130,7 @@
                 Are you sure you want to delete the color '@currentColorName'?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-danger" @onclick="DeleteColor" data-bs-dismiss="modal">Delete</button>
             </div>
         </div>
@@ -80,6 +143,10 @@
     private List<VehicleColor> colors;
     private int currentColorId;
     private string currentColorName;
+    private VehicleColor currentColor = new VehicleColor();
+    private VehicleColor createColor = new VehicleColor();
+    private string feedbackMessage = "";
+    private bool isProcessing = false; // Track processing state
 
     private bool isNavigating = false;
 
@@ -95,9 +162,69 @@
         isNavigating = false;
     }
 
-    private void EditColor(int id)
+    private async Task HandleCreateValidSubmit()
     {
-        NavigationManager.NavigateTo($"/vehiclecolor/edit/{id}");
+        await CreateColor();
+    }
+
+    private async Task CreateColor()
+    {
+        isProcessing = true;
+
+        var (isSuccess, message) = await ColorService.CreateColorIfNotExists(createColor);
+        feedbackMessage = message;
+        createColor = new VehicleColor();
+
+        if (isSuccess)
+        {
+            colors.Add(createColor);
+            Console.WriteLine("Color Added");
+            createColor = new VehicleColor();
+            StateHasChanged();
+
+            await CloseModal();
+        }
+        else
+        {
+            StateHasChanged();
+        }
+
+        colors = await ColorService.GetVehicleColorsAsync();
+        feedbackMessage = "";
+
+        isProcessing = false;
+    }    
+
+    private async Task CloseModal()
+    {
+        await JS.InvokeVoidAsync("modals.closeModal", "createColorModal");
+
+    }
+
+    private void SetCurrentColor(VehicleColor color)
+    {
+        currentColor = color; // This updates the bound color model in the modal form
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await SaveColor();
+    }
+
+    private async Task SaveColor()
+    {
+        Console.WriteLine("Attempting to save color ...");
+
+        var response = await ColorService.UpdateVehicleColor(currentColor);
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Color updated successfully.");
+            StateHasChanged();  // Update UI
+        }
+        else
+        {
+            Console.WriteLine("Failed to update the color. Status code: " + response.StatusCode);
+        }
     }
 
     private void ConfirmDelete(int colorId, string colorName)

@@ -44,19 +44,16 @@ namespace OT.Api.Controllers
             return Ok(color);
         }
 
-        // POST: api/vehiclecolor
-        [HttpPost]
-        public async Task<ActionResult<VehicleColor>> CreateVehicleColorAsync(CreateVehicleColorDTO dto)
+        // POST: api/vehiclecolor/createifnotexists
+        [HttpPost("createifnotexists")]
+        public async Task<IActionResult> CreateColorIfNotExists([FromBody] VehicleColor color)
         {
-            var color = new VehicleColor
+            var (isSuccess, message) = await _vehicleColorRepository.CreateColorIfNotExists(color);
+            if (isSuccess)
             {
-                ColorName = dto.ColorName,
-                HexValue = dto.HexValue
-            };
-
-            await _vehicleColorRepository.AddVehicleColorAsync(color);
-
-            return CreatedAtAction(nameof(GetVehicleColorByIdAsync), new { id = color.Id }, color);
+                return Ok(new { Message = message });
+            }
+            return BadRequest(message);
         }
 
         // PUT: api/vehiclecolor/5

@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using OT.Api.DataContext;
 using OT.Api.Repositories;
+using OT.Shared;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +43,29 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler(appError =>
+{
+    appError.Run(async context =>
+    {
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        context.Response.ContentType = "application/json";
+
+        var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+        if (contextFeature != null)
+        {
+            // Log the error detail
+            ILogger logger = context.RequestServices.GetRequiredService<ILogger<StartupBase>>();
+            logger.LogError(contextFeature.Error, "Unhandled exception occurred.");
+
+            await context.Response.WriteAsync(new ErrorDetail()
+            {
+                StatusCode = context.Response.StatusCode,
+                Message = "Internal Server Error. Please try again later."
+            }.ToString());
+        }
+    });
+});
 
 app.UseCors("AllowOTBlazor");
 

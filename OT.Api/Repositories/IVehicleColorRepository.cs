@@ -10,5 +10,6 @@ namespace OT.Api.Repositories
         Task AddVehicleColorAsync(VehicleColor vehicleColor);
         Task RemoveVehicleColorAsync(int id);
         Task UpdateVehicleColorAsync(VehicleColor vehicleColor);
+        Task<(bool isSuccess, string message)> CreateColorIfNotExists(VehicleColor color);
     }
 }
