@@ -30,7 +30,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<OTApiSQLContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("OTApiConnection")));
 
 // Add Repositories
-builder.Services.AddScoped<IShopRepository, ShopRepository>();
+builder.Services.AddScoped<IShopRespository, ShopRepository>();
 builder.Services.AddScoped<IShopClientRepository, ShopClientRepository>();
 builder.Services.AddScoped<IVehicleDetailsRepository, VehicleDetailsRepository>();
 builder.Services.AddScoped<IVehicleColorRepository, VehicleColorRepository>();

@@ -1,4 +1,4 @@
-﻿@page "/vehiclecolors"
+﻿@page "/settings/vehiclecolors"
 @inject HttpClient _httpClient
 @inject VehicleColorService ColorService
 @inject NavigationManager NavigationManager
@@ -22,7 +22,7 @@
     }
     else if (colors.Count == 0)
     {
-        <p><em>No Vehicle Colors found.</em></p>
+        <p><em>No Vehicle Colors Found.</em></p>
     }
     else
     {       
