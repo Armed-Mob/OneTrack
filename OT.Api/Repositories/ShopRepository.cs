@@ -59,7 +59,6 @@ namespace OT.Api.Repositories
                     ShopOwnerFirstName = s.ShopOwnerFirstName,
                     ShopOwnerLastName = s.ShopOwnerLastName,
                     ShopName = s.ShopName,
-                    ShopOwner = s.ShopOwner,
                     ShopOwnerEmail = s.ShopOwnerEmail,
                     ShopOwnerPhone = s.ShopOwnerPhone,
                     ShopEmail = s.ShopEmail,
