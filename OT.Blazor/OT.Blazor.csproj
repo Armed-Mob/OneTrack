@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\ShopClient\" />
-    <Folder Include="Pages\Settings\Shop\" />
   </ItemGroup>
 
 </Project>

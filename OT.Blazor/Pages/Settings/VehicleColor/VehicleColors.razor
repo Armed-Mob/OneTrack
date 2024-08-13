@@ -153,14 +153,7 @@
     protected override async Task OnInitializedAsync()
     {
         colors = await ColorService.GetVehicleColorsAsync();
-    }    
-
-    private void NavigateToCreateNewColor()
-    {
-        isNavigating = true;
-        NavigationManager.NavigateTo("/vehiclecolor/create");
-        isNavigating = false;
-    }
+    } 
 
     private async Task HandleCreateValidSubmit()
     {

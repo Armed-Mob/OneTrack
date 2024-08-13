@@ -1,0 +1,75 @@
+﻿@page "/settings/shop"
+@inject HttpClient _httpClient
+@inject ShopService ShopService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JS
+@using OT.Shared
+
+@code {
+    private List<Shop> shops;
+    private int currentShopId;
+    private string currentShopName;
+    private string feedbackMessage = "";
+    private Shop currentShop = new Shop();
+    private Shop createShop = new Shop();
+    private bool isProcessing = false;
+    private bool isNavigating = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        shops = await ShopService.GetShopsAsync();
+    }
+
+    private async Task HandleCreateValidSubmnit()
+    {
+        await CreateShop();
+    }
+
+    private async Task CreateShop()
+    {
+        isProcessing = true;
+
+        isProcessing = false;
+    }
+
+    private async Task CloseModal()
+    {
+        await JS.InvokeVoidAsync("modals.closeModal", "createShopModal");
+    }
+
+    private void SetCurrentShop(Shop shop)
+    {
+        currentShop = shop;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await SaveShop();
+    }
+
+    private async Task SaveShop()
+    {
+        Console.WriteLine("Attempting to save shop ...");
+    }
+
+    private void ConfirmDelete(int shopId, string shopName)
+    {
+        currentShopId = shopId;
+        currentShopName = shopName;
+        StateHasChanged();
+    }
+
+    private async Task DeleteShop()
+    {
+        bool deleted = await ShopService.DeleteShop(currentShopId);
+        if (deleted)
+        {
+            shops.RemoveAll(x => x.Id == currentShopId);
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("Failed to delte the shop.");
+        }
+    }
+}

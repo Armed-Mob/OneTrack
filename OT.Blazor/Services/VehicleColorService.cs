@@ -49,7 +49,7 @@ namespace OT.Blazor.Services
         {
             try
             {
-                HttpResponseMessage response = await _httpClient.DeleteAsync($"/api/vehiclecolor/{id}");
+                HttpResponseMessage response = await _httpClient.DeleteAsync($"api/vehiclecolor/{id}");
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex) 
