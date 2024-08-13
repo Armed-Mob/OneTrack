@@ -25,7 +25,7 @@ namespace OT.Api.Repositories
                     ColorName = c.ColorName,
                     HexValue = c.HexValue
                 })
-                .OrderByDescending(c => c.ColorName)
+                .OrderBy(c => c.ColorName)
                 .ToListAsync();
 
             return colors;
