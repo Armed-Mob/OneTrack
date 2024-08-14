@@ -12,6 +12,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 builder.Services.AddScoped<VinLookupService>();
 builder.Services.AddScoped<VehicleColorService>();
 builder.Services.AddScoped<ShopService>();
+builder.Services.AddScoped<ShopClientService>();
 
 await builder.Build().RunAsync();
 

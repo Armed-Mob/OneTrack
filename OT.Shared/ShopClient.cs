@@ -14,7 +14,7 @@ namespace OT.Shared
         public string ClientPhone { get; set; } = string.Empty;
         public string ClientEmail { get; set; } = string.Empty;
 
-        public string FullName
+        public string? FullName
         {
             get
             {

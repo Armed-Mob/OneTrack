@@ -148,8 +148,6 @@
     private string feedbackMessage = "";
     private bool isProcessing = false; // Track processing state
 
-    private bool isNavigating = false;
-
     protected override async Task OnInitializedAsync()
     {
         colors = await ColorService.GetVehicleColorsAsync();

@@ -1,0 +1,309 @@
+﻿@page "/settings/clients"
+@inject ShopService ShopService
+@using OT.Shared
+@page "/clients"
+@inject HttpClient _httpClient
+@inject ShopClientService ClientService
+@inject IJSRuntime JS
+@using OT.Shared
+
+<!-- Heading with create button -->
+<div class="container mb-3">
+    <div class="row">
+        <div class="mb-3">
+            <h1>Clients</h1>
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createClientModal">Create New Client</button>
+        </div>
+    </div>
+</div>
+
+<!-- Main content table -->
+<div class="mb-3">
+    @if (clients == null)
+    {
+        <p><em>Loading ....</em></p>
+    }
+    else if (clients.Count == 0)
+    {
+        <p><em>No Shops Found.</em></p>
+    }
+    else
+    {
+        <table class="table table-bordered table-responsive table-striped table-primary">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Shop</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var client in clients)
+                {
+                    <tr>
+                        <td>
+                            @client.FirstName
+                        </td>
+                        <td>
+                            @client.LastName
+                        </td>
+                        <td>
+                            @client.ClientPhone
+                        </td>
+                        <td>
+                            @client.ClientEmail
+                        </td>
+                        <td>
+                            @client.Shop.ShopName
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editClientModal" @onclick="() => SetCurrentClient(client)">
+                                Edit
+                            </button> |
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteClientModal" @onclick="() => ConfirmDelete(client.Id, client.FirstName, client.LastName)">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<!-- Create Shop Modal -->
+<div class="modal fade" data-bs-backdrop="static" id="createClientModal" tabindex="-1" aria-labelledby="createClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createShopModalLabel">Create Client</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="createClient" OnValidSubmit="HandleCreateValidSubmit">
+                    <div class="row mb-3">
+                        <div class="mb-3">
+                            <label for="shop" class="form-label">Shop:</label>
+                            <select @bind="createClient.ShopId" id="shop" class="form-control">
+                                <option value="">-- Select a shop --</option>
+                                @foreach (var shop in shops)
+                                {
+                                    <option value="@shop.Id">@shop.ShopName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <hr class="m-4" />
+                    <div class="row">
+                        <div class="mb-3 ">
+                            <label for="createClientFirstName" class="form-control mb-1">First Name:</label>
+                            <InputText id="createClientFirstName" class="form-control mb-1" @bind-Value="createClient.FirstName" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="createClientLastName" class="form-control mb-1">Last Name:</label>
+                            <InputText id="createClientLastName" class="form-control mb-1" @bind-Value="createClient.LastName" />
+                        </div>                        
+                    </div>
+                    <div class="row">
+                        <div class="mb-3">
+                            <label for="createClientPhone" class="form-control mb-1">Phone:</label>
+                            <InputText id="createClientPhone" class="form-control mb-1" @bind-Value="createClient.ClientPhone" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="createClientEmail" class="form-control mb-1">Email:</label>
+                            <InputText id="createClientEmail" class="form-control mb-1" @bind-Value="createClient.ClientEmail" />
+                        </div>                        
+                    </div>                   
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" @onclick="CreateClient" disabled="@isProcessing">Create Client</button>
+                @if (!string.IsNullOrEmpty(feedbackMessage))
+                {
+                    <div class="alert alert-warning" role="alert">
+                        @feedbackMessage
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Shop Modal -->
+<div class="modal fade" data-bs-backdrop="static" id="editClientModal" tabindex="-1" aria-labelledby="editClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header mb-2">
+                <h1 class="modal-title fs-5" id="editClientModalLabel">Edit Client: @currentClientFirstName @currentClientLastName</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="currentClient" OnValidSubmit="HandleValidSubmit">
+                    <div class="row mb-3">
+                        <div class="md-3">
+                            <label for="shop" class="form-label">Shop:</label>
+                            <select @bind="currentClient.ShopId" id="shop" class="form-control mb-1">
+                                <option value="">-- Select a shop --</option>
+                                @foreach (var shop in shops)
+                                {
+                                    <option value="@shop.Id">@shop.ShopName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <hr class="m-4" />
+                    <div class="row">
+                        <div class="mb-3 ">
+                            <label for="createClientFirstName" class="form-control mb-1">First Name:</label>
+                            <InputText id="createClientFirstName" class="form-control mb-1" @bind-Value="currentClient.FirstName" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="createClientLastName" class="form-control mb-1">Last Name:</label>
+                            <InputText id="createClientLastName" class="form-control mb-1" @bind-Value="currentClient.LastName" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3">
+                            <label for="createClientPhone" class="form-control mb-1">Phone:</label>
+                            <InputText id="createClientPhone" class="form-control mb-1" @bind-Value="currentClient.ClientPhone" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="createClientEmail" class="form-control mb-1">Email:</label>
+                            <InputText id="createClientEmail" class="form-control mb-1" @bind-Value="currentClient.ClientEmail" />
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" @onclick="SaveClient" disabled="@isProcessing">Save Changes</button>
+                @if (!string.IsNullOrEmpty(feedbackMessage))
+                {
+                    <div class="alert alert-warning" role="alert">
+                        @feedbackMessage
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Shop Modal -->
+<div class="modal fade" data-bs-backdrop="static" id="deleteClientModal" tabindex="-1" aria-labelledby="deleteClientModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteClientModalLabel">Confirm @currentClientFirstName @currentClientLastName Delete</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the client: '@currentClientFirstName @currentClientLastName'?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-success" @onclick="DeleteClient" data-bs-dismiss="modal">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private List<Shop> shops = new List<Shop>();
+    private List<ShopClient> clients;
+    private int currentClientId;
+    private string currentClientFirstName;
+    private string currentClientLastName;
+    private string feedbackMessage = "";
+    private ShopClient currentClient = new ShopClient();
+    private ShopClient createClient = new ShopClient();
+    private bool isProcessing = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        shops = await ShopService.GetShopsAsync();
+        clients = await ClientService.GetAllShopClientsAsync();
+        StateHasChanged();
+    }
+
+    private async Task HandleCreateValidSubmit()
+    {
+        await CreateClient();
+    }
+
+    private async Task CreateClient()
+    {
+        isProcessing = true;
+
+        var (isSuccess, message) = await ClientService.CreateClientIfNotExists(createClient);
+        feedbackMessage = message;
+
+        if (isSuccess)
+        {
+            clients.Add(createClient);
+            Console.WriteLine("Client Added");
+            createClient = new ShopClient();
+            StateHasChanged();
+
+            await CloseModal();
+        }
+        else
+        {
+            StateHasChanged();
+        }
+
+        clients = await ClientService.GetAllShopClientsAsync();
+        feedbackMessage = "";
+
+        isProcessing = false;
+    }
+
+    private async Task CloseModal()
+    {
+        await JS.InvokeVoidAsync("modals.closeModal", "createClientModal");
+    }
+
+    private void SetCurrentClient(ShopClient client)
+    {
+        currentClient = client;
+    }
+
+    private async void HandleValidSubmit()
+    {
+        await SaveClient();
+    }
+
+    private async Task SaveClient()
+    {
+        Console.WriteLine("Attempting to save client ....");
+    }
+
+    private void ConfirmDelete(int clientId, string clientFirstName, string clientLastName)
+    {
+        currentClientId = clientId;
+        currentClientFirstName = clientFirstName;
+        currentClientLastName = clientLastName;
+        StateHasChanged();
+    }
+
+    private async Task DeleteClient()
+    {
+        bool deleted = await ClientService.DeleteClient(currentClientId);
+        if (deleted)
+        {
+            clients.RemoveAll(c => c.Id == currentClientId);
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("Failed to delete the client.");
+        }
+    }
+}

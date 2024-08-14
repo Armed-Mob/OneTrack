@@ -91,7 +91,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <EditForm Model="createShop" OnValidSubmit="HandleCreateValidSubmnit">
+                <EditForm Model="createShop" OnValidSubmit="HandleCreateValidSubmit">
                     <div class="row">
                         <div class="mb-3">
                             <label for="createShopName" class="form-control mb-1">Shop Name:</label>
@@ -153,7 +153,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <EditForm Model="createShop" OnValidSubmit="HandleCreateValidSubmnit">
+                <EditForm Model="currentShop" OnValidSubmit="HandleValidSubmit">
                     <div class="row">
                         <div class="mb-3">
                             <label for="editShopName" class="form-control mb-1">Shop Name:</label>
@@ -247,7 +247,7 @@
         shops = await ShopService.GetShopsAsync();
     }
 
-    private async Task HandleCreateValidSubmnit()
+    private async Task HandleCreateValidSubmit()
     {
         await CreateShop();
     }
@@ -314,7 +314,7 @@
         }
         else
         {
-            Console.WriteLine("Failed to delte the shop.");
+            Console.WriteLine("Failed to delete the shop.");
         }
     }
 }

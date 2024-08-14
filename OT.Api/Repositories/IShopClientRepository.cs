@@ -1,13 +1,15 @@
-﻿using OT.Shared;
+﻿using OT.Api.DataTransferObjects.ShopClient;
+using OT.Shared;
 
 namespace OT.Api.Repositories
 {
-    public interface IShopClientRepository
+    public interface IShopClientRepository : IBaseRepository
     {
-        Task<IEnumerable<ShopClient>> GetShopClientsAsync();
+        Task<IEnumerable<GetAllClientsDTO>> GetShopClientsAsync();
         Task<ShopClient> GetShopClientByIdAsync(int id);
-        Task AddShopClientAsync(ShopClient shopClient);
+        Task AddShopClientAsync(CreateShopClientDTO dto);
         Task UpdateShopClientAsync(ShopClient shopClient);
         Task DeleteShopClientAsync(int id);
+        Task<(bool isSuccess, string message)> CreateClientIfNotExists(CreateShopClientDTO dto);
     }
 }
