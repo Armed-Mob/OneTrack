@@ -93,39 +93,39 @@
             <div class="modal-body">
                 <EditForm Model="createShop" OnValidSubmit="HandleCreateValidSubmnit">
                     <div class="row">
-                        <div class="mb-1">
-                            <label for="createShopName" class="form-control">Shop Name:</label>
-                            <InputText id="createShopName" class="form-control" @bind-Value="createShop.ShopName" />
+                        <div class="mb-3">
+                            <label for="createShopName" class="form-control mb-1">Shop Name:</label>
+                            <InputText id="createShopName" class="form-control mb-1" @bind-Value="createShop.ShopName" />
                         </div>                        
                     </div>
-                    <div class="row row-cols-2">
-                        <div class="mb-1">
-                            <label for="createShopPhone" class="form-control">Shop Phone:</label>
-                            <InputText id="createShopPhone" class="form-control" @bind-Value="createShop.ShopPhone" />
+                    <div class="row">
+                        <div class="mb-3">
+                            <label for="createShopPhone" class="form-control mb-1">Shop Phone:</label>
+                            <InputText id="createShopPhone" class="form-control mb-1" @bind-Value="createShop.ShopPhone" />
                         </div>
-                        <div class="mb-1">
-                            <label for="createShopEmail" class="form-control">Shop Email:</label>
-                            <InputText id="createShopEmail" class="form-control" @bind-Value="createShop.ShopEmail" />
-                        </div>
-                    </div>
-                    <div class="row row-cols-2">
-                        <div class="mb-1">
-                            <label for="createShopOwnerFirstName" class="form-control">Owner's First Name:</label>
-                            <InputText id="createShopOwnerFirstName" class="form-control" @bind-Value="createShop.ShopOwnerFirstName" />
-                        </div>
-                        <div class="mb-1">
-                            <label for="createShopOwnerLastName" class="form-control">Owner's Last Name:</label>
-                            <InputText id="createShopOwnerLastName" class="form-control" @bind-Value="createShop.ShopOwnerLastName" />
+                        <div class="mb-3">
+                            <label for="createShopEmail" class="form-control mb-1">Shop Email:</label>
+                            <InputText id="createShopEmail" class="form-control mb-1" @bind-Value="createShop.ShopEmail" />
                         </div>
                     </div>
-                    <div class="row row-cols-2">
-                        <div class="mb-1">
-                            <label for="createShopOwnerPhone" class="form-control">Owner's Phone:</label>
-                            <InputText id="createShopOwnerPhone" class="form-control" @bind-Value="createShop.ShopOwnerPhone" />
+                    <div class="row">
+                        <div class="mb-3">
+                            <label for="createShopOwnerFirstName" class="form-control mb-1">Owner's First Name:</label>
+                            <InputText id="createShopOwnerFirstName" class="form-control mb-1" @bind-Value="createShop.ShopOwnerFirstName" />
                         </div>
-                        <div class="mb-1">
-                            <label for="createShopOwnerEmail" class="form-control">Owner's Email:</label>
-                            <InputText id="createShopOwnerEmail" class="form-control" @bind-Value="createShop.ShopOwnerEmail" />
+                        <div class="mb-3">
+                            <label for="createShopOwnerLastName" class="form-control mb-1">Owner's Last Name:</label>
+                            <InputText id="createShopOwnerLastName" class="form-control mb-1" @bind-Value="createShop.ShopOwnerLastName" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3">
+                            <label for="createShopOwnerPhone" class="form-control mb-1">Owner's Phone:</label>
+                            <InputText id="createShopOwnerPhone" class="form-control mb-1" @bind-Value="createShop.ShopOwnerPhone" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="createShopOwnerEmail" class="form-control mb-1">Owner's Email:</label>
+                            <InputText id="createShopOwnerEmail" class="form-control mb-1" @bind-Value="createShop.ShopOwnerEmail" />
                         </div>
                     </div>
                 </EditForm>
@@ -148,50 +148,50 @@
 <div class="modal fade" data-bs-backdrop="static" id="editShopModal" tabindex="-1" aria-labelledby="editShopModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header mb-2">
                 <h1 class="modal-title fs-5" id="editShopModalLabel">Edit Shop: @currentShopName</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <EditForm Model="createShop" OnValidSubmit="HandleCreateValidSubmnit">
                     <div class="row">
-                        <div class="mb-1">
-                            <label for="editShopName" class="form-control">Shop Name:</label>
-                            <InputText id="editShopName" class="form-control" @bind-Value="currentShop.ShopName" />
+                        <div class="mb-3">
+                            <label for="editShopName" class="form-control mb-1">Shop Name:</label>
+                            <InputText id="editShopName" class="form-control mb-1" @bind-Value="currentShop.ShopName" />
                         </div>
-                        <div class="mb-1">
-                            <label for="editShopOwner" class="form-control">Shop Owner:</label>
+                        <div class="mb-3">
+                            <label for="editShopOwner" class="form-control mb-1">Shop Owner:</label>
                             TODO: Implement This
                         </div>                        
                     </div>
                     <div class="row row-cols-2">
-                        <div class="mb-1">
-                            <label for="editShopPhone" class="form-control">Shop Phone:</label>
+                        <div class="mb-3">
+                            <label for="editShopPhone" class="form-control mb-1">Shop Phone:</label>
                             <InputText id="editShopPhone" class="form-control" @bind-Value="currentShop.ShopPhone" />
                         </div>
-                        <div class="mb-1">
-                            <label for="editShopEmail" class="form-control">Shop Email:</label>
-                            <InputText id="editShopEmail" class="form-control" @bind-Value="currentShop.ShopEmail" />
+                        <div class="mb-3">
+                            <label for="editShopEmail" class="form-control mb-1">Shop Email:</label>
+                            <InputText id="editShopEmail" class="form-control mb-1" @bind-Value="currentShop.ShopEmail" />
                         </div>
                     </div>
                     <div class="row row-cols-2">
-                        <div class="mb-1">
-                            <label for="editShopOwnerFirstName" class="form-control">Owner's First Name:</label>
-                            <InputText id="editShopOwnerFirstName" class="form-control" @bind-Value="currentShop.ShopOwnerFirstName" />
+                        <div class="mb-3">
+                            <label for="editShopOwnerFirstName" class="form-control mb-1">Owner's First Name:</label>
+                            <InputText id="editShopOwnerFirstName" class="form-control mb-1" @bind-Value="currentShop.ShopOwnerFirstName" />
                         </div>
-                        <div class="mb-1">
-                            <label for="editShopOwnerLastName" class="form-control">Owner's Last Name:</label>
-                            <InputText id="editShopOwnerLastName" class="form-control" @bind-Value="currentShop.ShopOwnerLastName" />
+                        <div class="mb-3">
+                            <label for="editShopOwnerLastName" class="form-control mb-1">Owner's Last Name:</label>
+                            <InputText id="editShopOwnerLastName" class="form-control mb-1" @bind-Value="currentShop.ShopOwnerLastName" />
                         </div>
                     </div>
                     <div class="row row-cols-2">
-                        <div class="mb-1">
-                            <label for="editShopOwnerPhone" class="form-control">Owner's Phone:</label>
-                            <InputText id="editShopOwnerPhone" class="form-control" @bind-Value="currentShop.ShopOwnerPhone" />
+                        <div class="mb-3">
+                            <label for="editShopOwnerPhone" class="form-control mb-1">Owner's Phone:</label>
+                            <InputText id="editShopOwnerPhone" class="form-control mb-1" @bind-Value="currentShop.ShopOwnerPhone" />
                         </div>
-                        <div class="mb-1">
-                            <label for="editShopOwnerEmail" class="form-control">Owner's Email:</label>
-                            <InputText id="editShopOwnerEmail" class="form-control" @bind-Value="currentShop.ShopOwnerEmail" />
+                        <div class="mb-3">
+                            <label for="editShopOwnerEmail" class="form-control mb-1">Owner's Email:</label>
+                            <InputText id="editShopOwnerEmail" class="form-control mb-1" @bind-Value="currentShop.ShopOwnerEmail" />
                         </div>
                     </div>
                     
@@ -221,7 +221,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete the color '@currentShopName'?
+                Are you sure you want to delete the shop: '@currentShopName'?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
@@ -256,6 +256,24 @@
     {
         isProcessing = true;
 
+        var (isSuccess, message) = await ShopService.CreateShopIfNotExists(createShop);
+        feedbackMessage = message;
+
+        if (isSuccess)
+        {
+            shops.Add(createShop);
+            Console.WriteLine("Shop Added");
+            createShop = new Shop();
+            StateHasChanged();
+
+            await CloseModal();
+        }
+        else
+        {
+            StateHasChanged();
+        }
+
+        feedbackMessage = "";
         isProcessing = false;
     }
 

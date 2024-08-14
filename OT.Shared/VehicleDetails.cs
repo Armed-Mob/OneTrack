@@ -23,6 +23,7 @@ namespace OT.Shared
         public string? CabType { get; set; } = string.Empty;
         public string? FuelTypePrimary { get; set; } = string.Empty;
         public string? DisplacementL { get; set; } = string.Empty;
+        public string? LicensePlate { get; set; } = string.Empty;
 
         public int ShopClientId { get; set; }
         public virtual ShopClient ShopClient { get; set; }

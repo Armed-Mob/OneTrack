@@ -166,7 +166,6 @@
 
         var (isSuccess, message) = await ColorService.CreateColorIfNotExists(createColor);
         feedbackMessage = message;
-        createColor = new VehicleColor();
 
         if (isSuccess)
         {
